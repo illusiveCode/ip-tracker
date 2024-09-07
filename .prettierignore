@@ -1,0 +1,21 @@
+# Ignore dependencies
+node_modules
+
+# Ignore build outputs
+build
+dist
+coverage
+
+# Ignore logs
+*.log
+
+# Ignore system files
+.DS_Store
+
+# Ignore environment files
+.env
+
+# Ignore specific file types
+*.min.js
+*.min.css
+*.snap
