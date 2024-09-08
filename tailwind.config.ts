@@ -7,6 +7,22 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    screens: {
+      mobile: "375px",
+      tablet: "768px",
+      laptop: "1024px",
+      desktop: "1440px",
+    },
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: "1rem",
+        sm: "2rem",
+        lg: "4rem",
+        xl: "5rem",
+        "2xl": "6rem",
+      },
+    },
     extend: {
       fontFamily: {
         sans: ["Rubik", "sans-serif"],
