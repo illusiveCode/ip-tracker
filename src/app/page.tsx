@@ -1,48 +1,51 @@
 "use client";
 
-// import IPInfoCard from "./components/IPInfoCard";
-// import IPInput from "./components/IPInput";
-// import Image from "next/image";
-// import mobileTopBg from "@/../../public/pattern-bg-mobile.png";
-// import Heading from "./components/Heading";
+import { useState, useEffect } from "react";
+import Map from "./components/Map";
+import Image from "next/image";
 import { fetchGeolocation } from "./lib/api/geolocation";
+import topBg from "@/../../public/pattern-bg-mobile.png";
 
-export default function Home() {
-  const handleGetLocation = async () => {
+const Home = () => {
+  const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const getUserLocation = async () => {
     try {
       const locationData = await fetchGeolocation();
-      console.log("Location Data:", locationData);
-    } catch (error) {
-      console.error("Error fetching geolocation:", error);
+      const { lat, lng } = locationData.location;
+      setUserPosition([lat, lng]);
+      console.log(locationData);
+    } catch (err) {
+      setError("Failed to fetch location");
+      console.error(err);
+      alert(err);
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    getUserLocation();
+  }, []);
+
   return (
-    <div className="relative mx-auto">
-      {/* <Image src={mobileTopBg} alt={""} className="w-screen" />
-      <div className="absolute top-4 text-center left-[50%] -translate-x-[50%]">
-        <Heading title="IP Address Tracker" />
+    <div className="flex flex-col h-screen">
+      <div className="flex-shrink-0 h-1/3 ">
+        <Image src={topBg} alt={""} layout="responsive" className="object-cover" />
       </div>
-      <div className="container w-full mx-auto absolute top-16">
-        <div className="mb-6">
-          <IPInput initialValue={""} onButtonClick={() => console.log("HELLO")} />
-        </div>
-        <div>
-          <IPInfoCard
-            ipAddress={"192.212.174.101"}
-            location={"Brooklyn, NY 10001"}
-            timezone={"UTC -05:00"}
-            isp={"SpaceX Starlink"}
-          />
-        </div>
-      </div> */}
-      <div className="map | h-full w-screen">
-        <button
-          onClick={handleGetLocation}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Get Location
-        </button>
+      <div className="flex-1">
+        {loading ? (
+          <p>Loading map...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : (
+          userPosition && <Map initialPosition={userPosition} />
+        )}
       </div>
     </div>
   );
-}
+};
+
+export default Home;
