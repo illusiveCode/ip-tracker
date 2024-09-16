@@ -11,7 +11,7 @@ This is a solution to the [IP address tracker challenge on Frontend Mentor](http
 
 ### Screenshot
 
-![Project-Screenshot](./screenshot)
+![Project-Screenshot]()
 
 - Live Site URL: ()
 
