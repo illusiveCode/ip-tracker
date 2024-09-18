@@ -4,7 +4,11 @@ import { useState, useEffect } from "react";
 import Map from "./components/Map";
 import Image from "next/image";
 import { fetchGeolocation } from "./lib/api/geolocation";
-import topBg from "@/../../public/pattern-bg-mobile.png";
+import mobileBg from "@/../../public/pattern-bg-mobile.png";
+import desktopBg from "@/../../public/pattern-bg-desktop.png";
+import IPInput from "./components/IPInput";
+import Heading from "./components/Heading";
+import IPInfoCard from "./components/IPInfoCard";
 
 const Home = () => {
   const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
@@ -32,10 +36,34 @@ const Home = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="flex-shrink-0 h-1/3 ">
-        <Image src={topBg} alt={""} layout="responsive" className="object-cover" />
+      {/* Mobile BG */}
+      <div className="">
+        <div className="-z-10 w-full tablet:hidden">
+          <Image src={mobileBg} alt={""} layout="responsive" className="object-cover" />
+        </div>
+        <div className=" hidden tablet:block ">
+          <Image src={desktopBg} alt={""} layout="responsive" className="object-cover" />
+        </div>
+        <div className="mt-6 absolute left-[50%] -translate-x-[50%] z-20 top-0 grid gap-6 w-full container text-center">
+          <Heading title={"IP Address Tracker"} />
+          <IPInput
+            initialValue={""}
+            onButtonClick={() => {
+              console.log("SEARCHED");
+            }}
+          />
+          <div className="">
+            <IPInfoCard
+              ipAddress={"192.212.174.101"}
+              location={"Brooklyn, NY 10001"}
+              timezone={"UTC -05:00"}
+              isp={"SpaceX Starlink"}
+            />
+          </div>
+        </div>
       </div>
-      <div className="flex-1">
+
+      <div className="flex-1 ">
         {loading ? (
           <p>Loading map...</p>
         ) : error ? (

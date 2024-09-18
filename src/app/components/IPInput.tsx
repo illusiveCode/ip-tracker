@@ -15,7 +15,7 @@ const IPInput: FC<IPInputProps> = ({ initialValue, onButtonClick }) => {
   };
 
   return (
-    <div className="flex items-center max-w-[555px] bg-white rounded-xl w-full h-14 shadow hover:cursor-pointer">
+    <div className="flex mx-auto items-center max-w-[555px] bg-white rounded-xl w-full h-14 shadow hover:cursor-pointer">
       <input
         type="decimal"
         value={inputValue}

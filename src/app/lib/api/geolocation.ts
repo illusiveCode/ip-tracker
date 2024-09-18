@@ -5,7 +5,6 @@ export const fetchGeolocation = async () => {
   const url = `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`;
 
   try {
-    console.log("API Key", url);
     const response = await fetch(url, {
       method: "POST",
       headers: {

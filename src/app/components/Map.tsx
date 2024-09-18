@@ -6,7 +6,7 @@ import { Icon } from "leaflet";
 
 const customIcon = new Icon({
   iconUrl: "https://static.thenounproject.com/png/335079-200.png",
-  iconSize: [38, 38], // size of the icon
+  iconSize: [42, 42],
 });
 
 type MapProps = {
@@ -25,11 +25,12 @@ const Map: FC<MapProps> = ({ initialPosition }) => {
     <MapContainer
       center={position as LatLngExpression}
       zoom={15}
-      style={{ height: "100%", width: "100%" }}
+      zoomControl={false}
+      style={{ height: "100%", width: "100%", zIndex: "10" }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       {position && (
         <Marker position={position} icon={customIcon}>
