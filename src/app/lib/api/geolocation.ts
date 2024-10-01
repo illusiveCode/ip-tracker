@@ -1,28 +1,17 @@
-// /lib/api/geolocation.ts
+import { GeolocationResponse } from "./types";
 
-export const fetchGeolocation = async () => {
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_GEOLOCATION_API_KEY;
-  const url = `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`;
+export const fetchGeolocation = async (apiKey: string): Promise<GeolocationResponse> => {
+  const url = `https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}`;
 
   try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        considerIp: true, // Uses the device's IP address
-      }),
-    });
-
+    const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`Error fetching location: ${response.statusText}`);
+      throw new Error("Failed to fetch data");
     }
+    const result: GeolocationResponse = await response.json();
 
-    const data = await response.json();
-    return data;
+    return result;
   } catch (error) {
-    console.error("Failed to fetch geolocation:", error);
-    throw error;
+    throw new Error("Error fetching geolocation data");
   }
 };

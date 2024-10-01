@@ -1,37 +1,39 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Map from "./components/Map";
-import Image from "next/image";
-import { fetchGeolocation } from "./lib/api/geolocation";
+import IPInfoCard from "./components/IPInfoCard";
 import mobileBg from "@/../../public/pattern-bg-mobile.png";
 import desktopBg from "@/../../public/pattern-bg-desktop.png";
+import Image from "next/image";
 import IPInput from "./components/IPInput";
 import Heading from "./components/Heading";
-import IPInfoCard from "./components/IPInfoCard";
+import { fetchGeolocation } from "./lib/api/geolocation"; // Import the API call function
+import { GeolocationResponse } from "./lib/api/types"; // Ensure the types are correct
+import dynamic from "next/dynamic";
 
 const Home = () => {
-  const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
+  const [locationData, setLocationData] = useState<GeolocationResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const Map = dynamic(() => import("./components/Map"), { ssr: false });
 
-  const getUserLocation = async () => {
+  const apiKey = process.env.NEXT_PUBLIC_GEOLOCATION_API_KEY!; // Ensure the API key is loaded from .env
+
+  const fetchAPIData = async () => {
     try {
-      const locationData = await fetchGeolocation();
-      const { lat, lng } = locationData.location;
-      setUserPosition([lat, lng]);
-      console.log(locationData);
+      const result = await fetchGeolocation(apiKey); // Use the function here
+      setLocationData(result);
+      console.log(result);
     } catch (err) {
-      setError("Failed to fetch location");
+      setError("Failed to fetch data");
       console.error(err);
-      alert(err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    getUserLocation();
+    fetchAPIData();
   }, []);
 
   return (
@@ -50,23 +52,24 @@ const Home = () => {
               console.log("SEARCHED");
             }}
           />
-          <div className="">
+          {locationData && (
             <IPInfoCard
-              ipAddress={"192.212.174.101"}
-              location={"Brooklyn, NY 10001"}
-              timezone={"UTC -05:00"}
-              isp={"SpaceX Starlink"}
+              ipAddress={locationData.ip}
+              location={` ${locationData.location.region}, ${locationData.location.country}`}
+              timezone={`UTC ${locationData.location.timezone}`}
+              isp={locationData.isp}
             />
-          </div>
+          )}
         </div>
       </div>
 
       {/* DESKTOP */}
       <div className="tablet:flex hidden">
-        <div className=" max-h-[280px] w-full">
+        <div className="max-h-[280px] w-full">
           <Image src={desktopBg} alt={""} layout="responsive" className="object-cover" />
         </div>
-        <div className="mt-6  absolute left-[50%] -translate-x-[50%] z-20 top-0 grid gap-6 w-full container text-center">
+
+        <div className="mt-6 absolute left-[50%] -translate-x-[50%] z-20 top-0 grid gap-6 w-full container text-center">
           <Heading title={"IP Address Tracker"} />
           <IPInput
             initialValue={""}
@@ -74,24 +77,28 @@ const Home = () => {
               console.log("SEARCHED");
             }}
           />
-          <div className="mx-auto">
-            <IPInfoCard
-              ipAddress={"192.212.174.101"}
-              location={"Brooklyn, NY 10001"}
-              timezone={"UTC -05:00"}
-              isp={"SpaceX Starlink"}
-            />
-          </div>
+          {locationData && (
+            <div className="mx-auto">
+              <IPInfoCard
+                ipAddress={locationData.ip}
+                location={`${locationData.location.city}, ${locationData.location.region}`}
+                timezone={`UTC ${locationData.location.timezone}`}
+                isp={locationData.isp}
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="flex-1 ">
+      <div className="flex-1">
         {loading ? (
           <p>Loading map...</p>
         ) : error ? (
           <p>{error}</p>
         ) : (
-          userPosition && <Map initialPosition={userPosition} />
+          locationData && (
+            <Map initialPosition={[locationData.location.lat, locationData.location.lng]} />
+          )
         )}
       </div>
     </div>
