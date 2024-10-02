@@ -14,13 +14,20 @@ const IPInput: FC<IPInputProps> = ({ initialValue, onButtonClick }) => {
     setInputValue(event.target.value);
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      onButtonClick(inputValue);
+    }
+  };
+
   return (
     <div className="flex mx-auto items-center max-w-[555px] bg-white rounded-xl w-full h-14 shadow hover:cursor-pointer">
       <input
-        type="decimal"
+        type="text"
         value={inputValue}
         onChange={handleInputChange}
-        className="flex-1 text-gray-800 outline-none pl-4 "
+        onKeyDown={handleKeyDown}
+        className="flex-1 text-gray-800 outline-none pl-4"
       />
       <button
         onClick={() => onButtonClick(inputValue)}

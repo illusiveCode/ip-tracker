@@ -7,23 +7,24 @@ import desktopBg from "@/../../public/pattern-bg-desktop.png";
 import Image from "next/image";
 import IPInput from "./components/IPInput";
 import Heading from "./components/Heading";
-import { fetchGeolocation } from "./lib/api/geolocation"; // Import the API call function
-import { GeolocationResponse } from "./lib/api/types"; // Ensure the types are correct
+import { fetchGeolocation } from "./lib/api/geolocation";
+import { GeolocationResponse } from "./lib/api/types";
 import dynamic from "next/dynamic";
 
 const Home = () => {
   const [locationData, setLocationData] = useState<GeolocationResponse | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const Map = dynamic(() => import("./components/Map"), { ssr: false });
 
-  const apiKey = process.env.NEXT_PUBLIC_GEOLOCATION_API_KEY!; // Ensure the API key is loaded from .env
+  const apiKey = process.env.NEXT_PUBLIC_GEOLOCATION_API_KEY!;
 
-  const fetchAPIData = async () => {
+  const fetchAPIData = async (ip?: string) => {
+    setLoading(true);
     try {
-      const result = await fetchGeolocation(apiKey); // Use the function here
+      const result = await fetchGeolocation(apiKey, ip); // If no IP is passed, it fetches based on user's device IP
       setLocationData(result);
-      console.log(result);
+      setError(null);
     } catch (err) {
       setError("Failed to fetch data");
       console.error(err);
@@ -34,7 +35,14 @@ const Home = () => {
 
   useEffect(() => {
     fetchAPIData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const onInputEnter = (ip: string) => {
+    if (ip) {
+      fetchAPIData(ip);
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen">
@@ -46,12 +54,7 @@ const Home = () => {
 
         <div className="mt-6 absolute left-[50%] -translate-x-[50%] z-20 top-0 grid gap-6 w-full container text-center">
           <Heading title={"IP Address Tracker"} />
-          <IPInput
-            initialValue={""}
-            onButtonClick={() => {
-              console.log("SEARCHED");
-            }}
-          />
+          <IPInput initialValue={""} onButtonClick={onInputEnter} />
           {locationData && (
             <IPInfoCard
               ipAddress={locationData.ip}
@@ -71,12 +74,7 @@ const Home = () => {
 
         <div className="mt-6 absolute left-[50%] -translate-x-[50%] z-20 top-0 grid gap-6 w-full container text-center">
           <Heading title={"IP Address Tracker"} />
-          <IPInput
-            initialValue={""}
-            onButtonClick={() => {
-              console.log("SEARCHED");
-            }}
-          />
+          <IPInput initialValue={""} onButtonClick={onInputEnter} />
           {locationData && (
             <div className="mx-auto">
               <IPInfoCard

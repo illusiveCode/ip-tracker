@@ -8,12 +8,5 @@ export interface GeolocationResponse {
     lat: number;
     lng: number;
   };
-  as: {
-    asn: number;
-    name: string;
-    route: string;
-    domain: string;
-    type: string;
-  };
   isp: string;
 }
