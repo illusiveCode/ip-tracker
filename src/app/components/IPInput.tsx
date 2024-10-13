@@ -24,6 +24,7 @@ const IPInput: FC<IPInputProps> = ({ initialValue, onButtonClick }) => {
     <div className="flex mx-auto items-center max-w-[555px] bg-white rounded-xl w-full h-14 shadow hover:cursor-pointer">
       <input
         type="text"
+        placeholder="Search for any IP address"
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
