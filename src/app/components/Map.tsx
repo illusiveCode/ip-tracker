@@ -34,7 +34,7 @@ const Map: FC<MapProps> = ({ initialPosition }) => {
       />
       {position && (
         <Marker position={position} icon={customIcon}>
-          <Popup autoPan>You are here {position.toString()}</Popup>
+          <Popup autoPan>IP location(Approx): {position.toString()}</Popup>
         </Marker>
       )}
     </MapContainer>
