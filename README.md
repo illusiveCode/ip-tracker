@@ -9,7 +9,7 @@ This is a solution to the [IP address tracker challenge on Frontend Mentor](http
 - [What I learned](#what-i-learned)
 - [Author](#author)
 
-### Screensho
+### Screenshot
 
 ![Project-Screenshot]() coming 
 
