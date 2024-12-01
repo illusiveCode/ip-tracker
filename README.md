@@ -11,7 +11,7 @@ This is a solution to the [IP address tracker challenge on Frontend Mentor](http
 
 ### Screenshot
 
-![Project-Screenshot]() coming 
+![Project-Screenshot]() coming soon
 
 - Live Site URL: https://ip-loco.vercel.app/
 
